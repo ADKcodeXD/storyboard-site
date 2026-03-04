@@ -151,7 +151,7 @@ function ShotListPage() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/storyboard-site">
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/shots" element={<ShotListPage />} />
