@@ -1,11 +1,13 @@
+const BASE = import.meta.env.BASE_URL
+
 const BASE_SCENE = '夜晚室内：旧公寓客厅兼书房，窗外持续降雨，室内暖色钨丝灯与冷色月光交织。'
 const BASE_CHARACTERS = '固定角色：男A（深色夹克，30+）与女B（浅灰衬衫，28+），电影写实风，保持同一造型与同一空间连续性。'
 
 export const sections = [
-  { id: 'storyboard', title: '分镜', description: '基础叙事镜头与正反打语法。', cover: '/shots/shot-001.png' },
-  { id: 'shotSize', title: '景别', description: '从极特写到大全景的心理距离。', cover: '/shots/shot-008.png' },
-  { id: 'composition', title: '构图', description: '六种基础构图快速控制视觉重心。', cover: '/shots/shot-015.png' },
-  { id: 'angle', title: '视角', description: '平视 / 仰视 / 俯视 / 监控视角。', cover: '/shots/shot-022.png' },
+  { id: 'storyboard', title: '分镜', description: '基础叙事镜头与正反打语法。', cover: `${BASE}shots/shot-001.png` },
+  { id: 'shotSize', title: '景别', description: '从极特写到大全景的心理距离。', cover: `${BASE}shots/shot-008.png` },
+  { id: 'composition', title: '构图', description: '六种基础构图快速控制视觉重心。', cover: `${BASE}shots/shot-015.png` },
+  { id: 'angle', title: '视角', description: '平视 / 仰视 / 俯视 / 监控视角。', cover: `${BASE}shots/shot-022.png` },
 ]
 
 const SHOT_SIZES = ['极特写', '特写', '近景', '半身（中近景）', '中景', '全景', '大全景']
@@ -67,7 +69,7 @@ export const shots = SHOT_SIZES.flatMap((shotSize, sizeIndex) =>
       recommendedScenes: recommendedScenesBySize[shotSize],
       tags: ['基础镜头', shotSize, composition, angle, '正反打'],
       prompt: buildPrompt({ name, shotSize, composition, angle }),
-      thumbnail: `/shots/shot-${String(idx).padStart(3, '0')}.png`,
+      thumbnail: `${BASE}shots/shot-${String(idx).padStart(3, '0')}.png`,
     }
   }),
 )
