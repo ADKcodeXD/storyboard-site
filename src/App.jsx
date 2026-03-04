@@ -1,121 +1,161 @@
-import { useMemo, useState } from 'react';
-import { shotLibrary, COMPOSITIONS, CAMERA_POSITIONS, CAMERA_MOVEMENTS } from './data/shotLibrary';
-import './App.css';
+import { useMemo } from 'react'
+import { BrowserRouter, Link, Route, Routes, useSearchParams } from 'react-router-dom'
+import { categoryStats, categories, shots } from './data/shots'
+import './App.css'
 
-const FILTERS = {
-  composition: COMPOSITIONS,
-  cameraPosition: CAMERA_POSITIONS,
-  cameraMovement: CAMERA_MOVEMENTS,
-};
+const PAGE_SIZE = 12
 
-export default function App() {
-  const [keyword, setKeyword] = useState('');
-  const [filters, setFilters] = useState({
-    composition: '',
-    cameraPosition: '',
-    cameraMovement: '',
-  });
-  const [activeId, setActiveId] = useState(shotLibrary[0]?.id);
+function HomePage() {
+  return (
+    <main className="page">
+      <header className="hero">
+        <p className="eyebrow">Director Storyboard System</p>
+        <h1>电影分镜视觉手册</h1>
+        <p>四大板块统一管理：运镜、构图、分镜、景别。点击卡片进入列表页并自动筛选。</p>
+      </header>
 
-  const filteredShots = useMemo(() => {
-    const q = keyword.trim().toLowerCase();
-    return shotLibrary.filter((shot) => {
-      const passKeyword =
-        !q ||
-        [shot.shotName, shot.composition, shot.cameraPosition, shot.cameraMovement, shot.usage]
-          .join(' ')
-          .toLowerCase()
-          .includes(q);
+      <section className="home-grid">
+        {categoryStats.map((cat) => (
+          <Link key={cat.id} to={`/shots?category=${cat.id}`} className={`home-card ${cat.color}`}>
+            <img src={cat.cover} alt={cat.title} loading="lazy" />
+            <div className="mask" />
+            <div className="home-card-content">
+              <h2>{cat.title}</h2>
+              <p>{cat.description}</p>
+              <span>{cat.count} 条</span>
+            </div>
+          </Link>
+        ))}
+      </section>
+    </main>
+  )
+}
 
-      const passFilter =
-        (!filters.composition || shot.composition === filters.composition) &&
-        (!filters.cameraPosition || shot.cameraPosition === filters.cameraPosition) &&
-        (!filters.cameraMovement || shot.cameraMovement === filters.cameraMovement);
+function FilterSidebar({ searchParams, setSearchParams }) {
+  const selectedCategory = searchParams.get('category') || 'all'
+  const selectedType = searchParams.get('type') || 'all'
+  const selectedTag = searchParams.get('tag') || 'all'
+  const keyword = searchParams.get('q') || ''
 
-      return passKeyword && passFilter;
-    });
-  }, [keyword, filters]);
+  const types = ['all', ...new Set(shots.map((s) => s.type))]
+  const tags = ['all', ...new Set(shots.flatMap((s) => s.tags))]
 
-  const currentShot =
-    filteredShots.find((item) => item.id === activeId) ||
-    shotLibrary.find((item) => item.id === activeId) ||
-    filteredShots[0] ||
-    shotLibrary[0];
+  const update = (key, value) => {
+    const next = new URLSearchParams(searchParams)
+    if (!value || value === 'all') next.delete(key)
+    else next.set(key, value)
+    next.set('page', '1')
+    setSearchParams(next)
+  }
 
   return (
-    <div className="layout">
-      <aside className="sidebar">
-        <h1>教学分镜库</h1>
-
-        <label>关键词搜索</label>
-        <input
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          placeholder="搜索分镜名称/构图/机位/运镜"
-        />
-
-        <label>构图名称</label>
-        <select
-          value={filters.composition}
-          onChange={(e) => setFilters((prev) => ({ ...prev, composition: e.target.value }))}
-        >
-          <option value="">全部构图</option>
-          {FILTERS.composition.map((item) => (
-            <option key={item} value={item}>{item}</option>
-          ))}
+    <aside className="sidebar">
+      <h3>筛选器</h3>
+      <label>
+        分类
+        <select value={selectedCategory} onChange={(e) => update('category', e.target.value)}>
+          <option value="all">全部</option>
+          {categories.map((cat) => <option key={cat.id} value={cat.id}>{cat.title}</option>)}
         </select>
+      </label>
 
-        <label>摄像机位置</label>
-        <select
-          value={filters.cameraPosition}
-          onChange={(e) => setFilters((prev) => ({ ...prev, cameraPosition: e.target.value }))}
-        >
-          <option value="">全部机位</option>
-          {FILTERS.cameraPosition.map((item) => (
-            <option key={item} value={item}>{item}</option>
-          ))}
+      <label>
+        类型
+        <select value={selectedType} onChange={(e) => update('type', e.target.value)}>
+          {types.map((type) => <option key={type} value={type}>{type === 'all' ? '全部' : type}</option>)}
         </select>
+      </label>
 
-        <label>摄像机动作</label>
-        <select
-          value={filters.cameraMovement}
-          onChange={(e) => setFilters((prev) => ({ ...prev, cameraMovement: e.target.value }))}
-        >
-          <option value="">全部运镜</option>
-          {FILTERS.cameraMovement.map((item) => (
-            <option key={item} value={item}>{item}</option>
-          ))}
+      <label>
+        标签
+        <select value={selectedTag} onChange={(e) => update('tag', e.target.value)}>
+          {tags.map((tag) => <option key={tag} value={tag}>{tag === 'all' ? '全部' : tag}</option>)}
         </select>
+      </label>
 
-        <p className="count">结果：{filteredShots.length} / {shotLibrary.length}</p>
+      <label>
+        关键词
+        <input value={keyword} onChange={(e) => update('q', e.target.value.trim())} placeholder="分镜名 / 用途" />
+      </label>
+    </aside>
+  )
+}
 
-        <ul className="shotList">
-          {filteredShots.map((shot) => (
-            <li key={shot.id}>
-              <button
-                type="button"
-                className={shot.id === currentShot.id ? 'active' : ''}
-                onClick={() => setActiveId(shot.id)}
-              >
-                <strong>{shot.shotName}</strong>
-                <span>{shot.composition} · {shot.cameraPosition} · {shot.cameraMovement}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </aside>
+function ShotListPage() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const page = Number(searchParams.get('page') || 1)
 
-      <main className="detail">
-        <h2>{currentShot.shotName}</h2>
-        <div className="detailGrid">
-          <p><strong>构图名称：</strong>{currentShot.composition}</p>
-          <p><strong>摄像机位置：</strong>{currentShot.cameraPosition}</p>
-          <p><strong>摄像机动作：</strong>{currentShot.cameraMovement}</p>
-          <p><strong>配图路径：</strong>{currentShot.image}</p>
+  const filtered = useMemo(() => {
+    const category = searchParams.get('category')
+    const type = searchParams.get('type')
+    const tag = searchParams.get('tag')
+    const q = (searchParams.get('q') || '').toLowerCase()
+
+    return shots.filter((s) => {
+      if (category && s.category !== category) return false
+      if (type && s.type !== type) return false
+      if (tag && !s.tags.includes(tag)) return false
+      if (q && !(s.name.toLowerCase().includes(q) || s.purpose.toLowerCase().includes(q) || s.composition.toLowerCase().includes(q))) return false
+      return true
+    })
+  }, [searchParams])
+
+  const totalPage = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const safePage = Math.min(Math.max(page, 1), totalPage)
+  const pageItems = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE)
+
+  const goPage = (nextPage) => {
+    const next = new URLSearchParams(searchParams)
+    next.set('page', String(nextPage))
+    setSearchParams(next)
+  }
+
+  return (
+    <main className="page list-layout">
+      <FilterSidebar searchParams={searchParams} setSearchParams={setSearchParams} />
+      <section className="content">
+        <div className="list-head">
+          <Link to="/" className="back-link">← 返回首页</Link>
+          <h1>分镜列表</h1>
+          <p>共 {filtered.length} 条结果，当前第 {safePage}/{totalPage} 页</p>
         </div>
-        <p><strong>用途说明：</strong>{currentShot.usage}</p>
-        <img src={currentShot.image} alt={currentShot.shotName} className="preview" />
-      </main>
-    </div>
-  );
+
+        <div className="shot-list">
+          {pageItems.map((shot) => (
+            <article key={shot.id} className="shot-item">
+              <img src={shot.thumbnail} alt={shot.name} loading="lazy" />
+              <div className="meta">
+                <h3>{shot.name}</h3>
+                <ul>
+                  <li><strong>构图名称：</strong>{shot.composition}</li>
+                  <li><strong>摄像机位置：</strong>{shot.cameraPosition}</li>
+                  <li><strong>摄像机动作：</strong>{shot.cameraMove}</li>
+                  <li><strong>景别：</strong>{shot.shotSize}</li>
+                  <li><strong>用途说明：</strong>{shot.purpose}</li>
+                </ul>
+                <div className="tags">{shot.tags.map((t) => <span key={t}>{t}</span>)}</div>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="pagination">
+          <button disabled={safePage === 1} onClick={() => goPage(safePage - 1)}>上一页</button>
+          <span>{safePage} / {totalPage}</span>
+          <button disabled={safePage === totalPage} onClick={() => goPage(safePage + 1)}>下一页</button>
+        </div>
+      </section>
+    </main>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/shots" element={<ShotListPage />} />
+      </Routes>
+    </BrowserRouter>
+  )
 }
