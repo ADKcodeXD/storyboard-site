@@ -123,7 +123,7 @@ function createShots() {
           shotSize,
           purpose,
         }),
-        thumbnail: `/storyboard-site/shots/shot-${imageNo}.png`,
+        thumbnail: `https://pub-9e8ce8886f764d2387d34756aa631d8c.r2.dev/shot-${imageNo}.png`,
       })
     })
   })
