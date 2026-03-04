@@ -1,35 +1,57 @@
-const U='https://source.unsplash.com/featured/800x500/?';
-const data=[
- {title:'三角构图',cat:'构图',tags:['平衡','稳定','人物群像'],desc:'主体形成三角关系，强化稳定与叙事重心。',img:U+'portrait,group,triangular-composition',source:'https://unsplash.com/s/photos/triangular-composition'},
- {title:'左三分之一构图',cat:'构图',tags:['三分法','留白','引导视线'],desc:'主体放在画面左侧三分之一，右侧留白承接信息。',img:U+'portrait,rule-of-thirds,left',source:'https://unsplash.com/s/photos/rule-of-thirds'},
- {title:'居中对称构图',cat:'构图',tags:['对称','秩序','庄重'],desc:'主体居中，左右结构对称，强化仪式感。',img:U+'symmetry,architecture,centered',source:'https://unsplash.com/s/photos/symmetry'},
- {title:'引导线构图',cat:'构图',tags:['线条','纵深','动势'],desc:'利用道路、栏杆等线条引导视线至主体。',img:U+'leading-lines,road,street',source:'https://unsplash.com/s/photos/leading-lines'},
- {title:'前景框架构图',cat:'构图',tags:['层次','空间','沉浸'],desc:'以前景形成框架包裹主体，增加纵深。',img:U+'frame-within-frame,window,door',source:'https://unsplash.com/s/photos/frame-within-frame'},
- {title:'对角线构图',cat:'构图',tags:['张力','速度','冲突'],desc:'主体沿对角线排布，营造运动和冲突感。',img:U+'diagonal-composition,motion',source:'https://unsplash.com/s/photos/diagonal-composition'},
- {title:'俯拍机位',cat:'机位',tags:['压迫','观察视角'],desc:'镜头高于主体，常用于弱化角色力量。',img:U+'top-view,overhead,person',source:'https://unsplash.com/s/photos/top-view-person'},
- {title:'仰拍机位',cat:'机位',tags:['权威','压迫感'],desc:'镜头低于主体，强化角色气场。',img:U+'low-angle,building,person',source:'https://unsplash.com/s/photos/low-angle'},
- {title:'过肩镜头',cat:'叙事',tags:['对话','关系'],desc:'从A肩后看B，强调人物关系与对位。',img:U+'over-shoulder,conversation',source:'https://unsplash.com/s/photos/over-shoulder'},
- {title:'特写镜头',cat:'景别',tags:['情绪','细节'],desc:'突出面部或物体细节，传达强情绪。',img:U+'close-up,face,emotion',source:'https://unsplash.com/s/photos/close-up-face'},
- {title:'中景镜头',cat:'景别',tags:['动作','关系'],desc:'兼顾人物与环境，适合对话和行动。',img:U+'medium-shot,person,street',source:'https://unsplash.com/s/photos/medium-shot'},
- {title:'全景镜头',cat:'景别',tags:['环境','建立空间'],desc:'展示场景全貌，建立时空关系。',img:U+'wide-shot,landscape,cinematic',source:'https://unsplash.com/s/photos/wide-shot'}
+const data = [
+  { title:'叙事-开场建立', cat:'叙事', tags:['建立镜头','时空交代'], desc:'先给环境全貌，再切人物进入，建立故事起点。', img:'assets/generated/narrative.svg', source:'#' },
+  { title:'叙事-线索揭示', cat:'叙事', tags:['信息点','节奏推进'], desc:'通过三连镜头把关键线索逐步推到观众视线中心。', img:'assets/generated/narrative.svg', source:'#' },
+
+  { title:'动作-追逐段', cat:'动作', tags:['高速移动','运动轨迹'], desc:'对角线与前后景位移强化速度感。', img:'assets/generated/action.svg', source:'#' },
+  { title:'动作-冲突爆发', cat:'动作', tags:['张力','爆发'], desc:'短焦快速切镜+动态线条，突出打击与反应。', img:'assets/generated/action.svg', source:'#' },
+
+  { title:'对话-正反打', cat:'对话', tags:['过肩镜头','关系'], desc:'A肩后看B，再切B肩后看A，形成标准对话节奏。', img:'assets/generated/dialogue.svg', source:'#' },
+  { title:'对话-情绪逼近', cat:'对话', tags:['特写','停顿'], desc:'在关键台词前后拉近景别，捕捉微表情。', img:'assets/generated/dialogue.svg', source:'#' },
+
+  { title:'MV-副歌爆点', cat:'MV', tags:['节拍剪辑','灯光'], desc:'副歌处提高切镜频率，配合霓虹主色统一视觉。', img:'assets/generated/mv.svg', source:'#' },
+  { title:'MV-桥段过渡', cat:'MV', tags:['转场','氛围'], desc:'用旋转或遮挡转场把叙事段引入表演段。', img:'assets/generated/mv.svg', source:'#' },
+
+  { title:'风景-远景建立', cat:'风景', tags:['航拍','空间感'], desc:'先远景建立地理关系，再中景进入人物活动。', img:'assets/generated/landscape.svg', source:'#' },
+  { title:'风景-情绪景别', cat:'风景', tags:['光线','氛围'], desc:'利用日出/日落逆光让环境参与情绪表达。', img:'assets/generated/landscape.svg', source:'#' }
 ];
 
-const grid=document.getElementById('grid');
-const search=document.getElementById('search');
-const category=document.getElementById('categoryFilter');
-const modal=document.getElementById('modal');
-const els={title:mTitle,img:mImg,cat:mCat,tags:mTags,desc:mDesc,source:mSource};
-closeBtn.onclick=()=>modal.close();
+const grid = document.getElementById('grid');
+const search = document.getElementById('search');
+const category = document.getElementById('categoryFilter');
+const modal = document.getElementById('modal');
+const els = { title:mTitle, img:mImg, cat:mCat, tags:mTags, desc:mDesc, source:mSource };
+closeBtn.onclick = () => modal.close();
 
 function render(){
- const q=search.value.trim(); const c=category.value;
- grid.innerHTML='';
- data.filter(x=>(c==='all'||x.cat===c)&&(`${x.title}${x.tags.join('')}${x.desc}`.includes(q)))
- .forEach(x=>{
-   const d=document.createElement('div'); d.className='card';
-   d.innerHTML=`<img src="${x.img}"/><div class="meta"><div class="title">${x.title}</div><div class="cat">${x.cat}</div><div class="tags">${x.tags.join(' / ')}</div></div>`;
-   d.onclick=()=>{els.title.textContent=x.title;els.img.src=x.img;els.cat.textContent=x.cat;els.tags.textContent=x.tags.join('、');els.desc.textContent=x.desc;els.source.href=x.source||'#';modal.showModal();}
-   grid.appendChild(d);
- })
+  const q = search.value.trim();
+  const c = category.value;
+  grid.innerHTML = '';
+
+  data
+    .filter(x => (c === 'all' || x.cat === c) && `${x.title}${x.tags.join('')}${x.desc}`.includes(q))
+    .forEach(x => {
+      const d = document.createElement('div');
+      d.className = 'card';
+      d.innerHTML = `<img src="${x.img}" alt="${x.title}"/><div class="meta"><div class="title">${x.title}</div><div class="cat">${x.cat}</div><div class="tags">${x.tags.join(' / ')}</div></div>`;
+      d.onclick = () => {
+        els.title.textContent = x.title;
+        els.img.src = x.img;
+        els.cat.textContent = x.cat;
+        els.tags.textContent = x.tags.join('、');
+        els.desc.textContent = x.desc;
+        if (x.source === '#') {
+          els.source.textContent = '本地示意图';
+          els.source.removeAttribute('href');
+        } else {
+          els.source.textContent = '查看原图';
+          els.source.href = x.source;
+        }
+        modal.showModal();
+      };
+      grid.appendChild(d);
+    });
 }
-search.oninput=render; category.onchange=render; render();
+
+search.oninput = render;
+category.onchange = render;
+render();
