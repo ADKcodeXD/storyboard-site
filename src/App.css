@@ -1,35 +1,106 @@
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #111827;
+  background: #f3f4f6;
+}
+
 * { box-sizing: border-box; }
-body { margin: 0; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f5f8; color: #101827; }
 
-.layout { display: grid; grid-template-columns: 360px 1fr; min-height: 100vh; }
-.sidebar { padding: 20px; border-right: 1px solid #d7dce5; background: #fff; overflow-y: auto; }
-.detail { padding: 24px; overflow-y: auto; }
+body { margin: 0; }
 
-h1 { margin: 0 0 6px; font-size: 28px; }
-h2 { margin-top: 16px; }
-.muted { color: #586174; margin: 0 0 16px; }
-.label { display: block; margin-bottom: 6px; font-weight: 600; }
-.searchInput { width: 100%; padding: 10px 12px; border: 1px solid #c7ceda; border-radius: 10px; margin-bottom: 14px; }
+.layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  min-height: 100vh;
+}
 
-.filterBlock h3 { margin: 14px 0 8px; font-size: 14px; }
-.chipGrid { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip { border: 1px solid #c7ceda; background: #fff; border-radius: 999px; padding: 6px 10px; cursor: pointer; }
-.chip.active { background: #111827; color: #fff; border-color: #111827; }
+.sidebar {
+  border-right: 1px solid #d1d5db;
+  background: #ffffff;
+  padding: 16px;
+  overflow: auto;
+}
 
-.listBlock { margin-top: 18px; }
-.listHead { font-size: 13px; color: #5b6475; margin-bottom: 8px; }
-.shotList { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.shotBtn { width: 100%; text-align: left; border: 1px solid #cfd6e2; border-radius: 10px; background: #fff; padding: 10px; cursor: pointer; }
-.shotBtn small { display: block; color: #6c7383; margin-top: 4px; }
-.shotBtn.current { border-color: #111827; background: #eef2ff; }
+.sidebar h1 { margin: 0 0 14px; font-size: 24px; }
 
-.heroWrap { border: 1px solid #cfd6e2; border-radius: 16px; overflow: hidden; background: #fff; }
-.hero { width: 100%; display: block; aspect-ratio: 16 / 9; object-fit: contain; background: #fff; }
+.sidebar label {
+  display: block;
+  margin: 10px 0 6px;
+  font-size: 13px;
+  color: #374151;
+}
 
-.dictionary { margin-top: 20px; border: 1px solid #ced5e2; border-radius: 10px; padding: 10px 14px; background: #fff; }
-.dictionary summary { cursor: pointer; font-weight: 600; }
+.sidebar input,
+.sidebar select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fff;
+}
 
-@media (max-width: 960px) {
+.count {
+  margin: 12px 0;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.shotList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.shotList button {
+  width: 100%;
+  text-align: left;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.shotList button.active {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.shotList strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.shotList span {
+  color: #4b5563;
+  font-size: 12px;
+}
+
+.detail {
+  padding: 20px;
+}
+
+.detail h2 { margin-top: 0; }
+
+.detailGrid {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.preview {
+  width: min(100%, 880px);
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  background: #fff;
+}
+
+@media (max-width: 980px) {
   .layout { grid-template-columns: 1fr; }
-  .sidebar { border-right: none; border-bottom: 1px solid #d7dce5; max-height: 58vh; }
+  .sidebar { border-right: 0; border-bottom: 1px solid #d1d5db; max-height: 45vh; }
 }

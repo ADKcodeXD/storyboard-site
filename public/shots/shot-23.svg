@@ -1,0 +1,14 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 960 540'>
+  <defs>
+    <marker id='arrowGreen' viewBox='0 0 10 10' refX='8' refY='5' markerWidth='8' markerHeight='8' orient='auto-start-reverse'><path d='M0 0 L10 5 L0 10 z' fill='#16a34a'/></marker>
+    <marker id='arrowRed' viewBox='0 0 10 10' refX='8' refY='5' markerWidth='8' markerHeight='8' orient='auto-start-reverse'><path d='M0 0 L10 5 L0 10 z' fill='#dc2626'/></marker>
+  </defs>
+  <rect width='960' height='540' fill='#f8fafc'/>
+  <rect x='40' y='40' width='880' height='460' fill='#ffffff' stroke='#cbd5e1' stroke-width='2'/>
+  <rect x='40' y='40' width='880' height='460' fill='none' stroke='#94a3b8' stroke-dasharray='8 7'/><rect x='580' y='80' width='300' height='380' fill='rgba(148,163,184,.12)' stroke='none'/>
+  <circle cx='480' cy='295' r='24' fill='#111827'/><rect x='460' y='320' width='40' height='90' rx='12' fill='#1f2937'/><line x1='480' y1='410' x2='452' y2='460' stroke='#1f2937' stroke-width='10'/><line x1='480' y1='410' x2='508' y2='460' stroke='#1f2937' stroke-width='10'/>
+  <line x1='160' y1='110' x2='360' y2='250' stroke='#16a34a' stroke-width='6' marker-end='url(#arrowGreen)'/><text x='160' y='98' fill='#15803d' font-size='24'>相机方向(俯拍)</text>
+  <path d='M690 180 Q780 40 860 180' fill='none' stroke='#dc2626' stroke-width='6' marker-end='url(#arrowRed)'/><text x='700' y='95' fill='#dc2626' font-size='24'>运镜：甩镜</text>
+  <text x='60' y='84' fill='#0f172a' font-size='28' font-weight='700'>shot-23｜留白构图</text>
+  <text x='60' y='118' fill='#334155' font-size='22'>人物位置 + 构图辅助线 + 相机方向 + 运镜箭头</text>
+</svg>
